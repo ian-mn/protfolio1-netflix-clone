@@ -1,4 +1,4 @@
-from uuid import UUID
+import uuid
 
 from ckeditor.fields import RichTextField
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -11,7 +11,7 @@ class UUIDMixin(models.Model):
 
     id = models.UUIDField(
         primary_key=True,
-        default=UUID,
+        default=uuid.uuid4,
         editable=False,
     )
 
@@ -71,14 +71,15 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
     def __str__(self) -> str:
         return self.title
 
-    image_path = models.FileField(_("image_path"), blank=True, null=True)
-    trailer_url = models.URLField(_("trailer_url"), blank=True)
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"), blank=True)
     creation_date = models.DateField(_("creation_date"), blank=True)
     rating = models.FloatField(
         _("rating"), validators=[MinValueValidator(0), MaxValueValidator(10)]
     )
+
+    image_path = models.FileField(_("image_path"), blank=True, null=True)
+    trailer_url = models.URLField(_("trailer_url"), blank=True)
 
     genres = models.ManyToManyField(Genre, through="GenreFilmwork")
     persons = models.ManyToManyField(Person, through="PersonFilmwork")
