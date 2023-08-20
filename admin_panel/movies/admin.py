@@ -1,14 +1,14 @@
 from django.contrib import admin
 
-from .models import Filmwork, Genre, GenreFilmWork, Person, PersonFilmWork
+from .models import Filmwork, Genre, GenreFilmwork, Person, PersonFilmwork
 
 
 class GenreFilmworkInline(admin.TabularInline):
-    model = GenreFilmWork
+    model = GenreFilmwork
 
 
 class PersonFilmWorkInline(admin.TabularInline):
-    model = PersonFilmWork
+    model = PersonFilmwork
 
 
 @admin.register(Genre)
@@ -31,7 +31,6 @@ class FilmworkAdmin(admin.ModelAdmin):
 
     list_display = (
         "title",
-        "type",
         "creation_date",
         "rating",
         "get_genres",
@@ -50,5 +49,4 @@ class FilmworkAdmin(admin.ModelAdmin):
 
     get_genres.short_description = "Жанры фильма"
 
-    list_filter = ("type",)
     search_fields = ("title", "description", "id")
