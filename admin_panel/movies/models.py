@@ -1,6 +1,5 @@
 import uuid
 
-from ckeditor.fields import RichTextField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -45,7 +44,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
         return self.name
 
     name = models.CharField(_("name"), max_length=255)
-    description = models.TextField(_("description"), blank=True)
+    description = models.TextField(_("description"), blank=True, null=True)
 
     class Meta:
         db_table = 'content"."genre'
@@ -58,8 +57,7 @@ class Person(UUIDMixin, TimeStampedMixin):
         return self.full_name
 
     full_name = models.CharField(_("full_name"), max_length=255)
-    birth_date = models.DateField(_("birth_date"))
-    bio = RichTextField(_("bio"))
+    image_url = models.URLField(_("image_url"), blank=True, null=True)
 
     class Meta:
         db_table = 'content"."person'
@@ -78,7 +76,7 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
         _("rating"), validators=[MinValueValidator(0), MaxValueValidator(10)]
     )
 
-    image_path = models.FileField(_("image_path"), blank=True, null=True)
+    image_url = models.URLField(_("image_url"), blank=True, null=True)
     trailer_url = models.URLField(_("trailer_url"), blank=True)
 
     genres = models.ManyToManyField(Genre, through="GenreFilmwork")
@@ -110,17 +108,10 @@ class GenreFilmwork(UUIDMixin, DatedMixin):
 
 
 class PersonFilmwork(UUIDMixin, DatedMixin):
-    class Role(models.TextChoices):
-        ACTOR = "actor", _("actor")
-        DIRECTOR = "director", _("director")
-        WRITER = "writer", _("writer")
-
     film_work = models.ForeignKey("Filmwork", on_delete=models.CASCADE)
     person = models.ForeignKey(
         "Person", on_delete=models.CASCADE, verbose_name=_("Person")
     )
-
-    role = models.TextField(_("role"), choices=Role.choices, blank=False)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -129,7 +120,7 @@ class PersonFilmwork(UUIDMixin, DatedMixin):
         verbose_name_plural = _("PersonFilmworks")
         constraints = [
             models.UniqueConstraint(
-                fields=["film_work", "person", "role"],
+                fields=["film_work", "person"],
                 name="film_work_person_idx",
             ),
         ]
