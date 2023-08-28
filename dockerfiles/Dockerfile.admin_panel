@@ -14,9 +14,11 @@ RUN groupadd -r backend && useradd -d /app -r -g backend backend \
 USER backend
 RUN mkdir ./static
 
-COPY /admin_panel/ ./
+COPY /admin_panel/requirements.txt ./
 
 ENV PATH="/app/.local/bin:${PATH}"
 RUN pip install -r requirements.txt
+
+COPY /admin_panel/ ./
 
 ENTRYPOINT ["./admin_panel_entrypoint.sh"]
