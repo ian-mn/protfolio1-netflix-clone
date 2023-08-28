@@ -3,13 +3,13 @@ version: '3'
 services:
   
   db:
-    image: postgres:16
+    image: postgres:14
     environment:
       - POSTGRES_DB=${pg_db}
       - POSTGRES_USER=${pg_user}
       - POSTGRES_PASSWORD=${pg_pass}
     ports:
-      - "${pg_port}"
+      - "${pg_port}:${pg_port}"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -26,7 +26,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - static_volume:/static/
+      - static_volume:/app/static/
     depends_on:
       db:
         condition: service_healthy
@@ -71,34 +71,9 @@ services:
       - "${redis_port}"
     command: redis-server --requirepass ${redis_pass} --appendonly yes
     networks:
-      - movies
-
-  es_etl:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.es_etl
-    env_file:
-      - ./.env
-    depends_on:
-      db:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-      redis:
-    networks:
       - netflix_clone
 
-  api:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.api
-    env_file:
-      - ./.env
-    depends_on:
-      db:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
+  
 
 networks:
   netflix_clone:
