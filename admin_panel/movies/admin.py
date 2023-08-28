@@ -10,6 +10,8 @@ class GenreFilmworkInline(admin.TabularInline):
 class PersonFilmWorkInline(admin.TabularInline):
     model = PersonFilmwork
 
+    raw_id_fields = ("person",)
+
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
@@ -36,7 +38,10 @@ class FilmworkAdmin(admin.ModelAdmin):
         "get_genres",
     )
 
-    list_prefetch_related = ("genres",)
+    list_prefetch_related = (
+        "genres",
+        "persons",
+    )
 
     def get_queryset(self, request):
         queryset = (
