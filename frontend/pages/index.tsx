@@ -8,12 +8,12 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   return (
-   <div className="relative h-screen lg:h-[140vh] bg-gradient-to-b from-gray-900/100">
+   <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">
     <Head>
       <title>Home - Netflix</title>
     </Head>
     <Header/>
-    <main>
+    <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
 
       <Banner/>
       <section>
@@ -31,3 +31,7 @@ export default function Home() {
    </div> 
   )
 }
+
+// export const getServerSideProps = async () => {
+//   const 
+// }
