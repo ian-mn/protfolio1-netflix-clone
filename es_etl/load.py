@@ -28,7 +28,7 @@ class Load:
         else:
             logger.info(f"ES index '{index_name}' already exists.")
 
-    #@backoff()
+    @backoff()
     def bulk(self, actions: list[dict]) -> None:
         """Bulk loads actions into Elasticsearch.
 
